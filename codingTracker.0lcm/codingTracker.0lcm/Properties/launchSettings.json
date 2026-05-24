@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "codingTracker.0lcm": {
+      "commandName": "Project",
+      "workingDirectory": "$(ProjectDir)"
+    }
+  }
+}

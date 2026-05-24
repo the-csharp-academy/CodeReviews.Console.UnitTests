@@ -1,0 +1,6 @@
+<Solution>
+    <Project Path="codingTracker.0lcm.IntegrationTests/codingTracker.0lcm.IntegrationTests.csproj"/>
+    <Project Path="codingTracker.0lcm.UnitTests/codingTracker.0lcm.UnitTests.csproj"
+             Id="2009a303-7ce9-4f47-8f62-ea31038932c6"/>
+    <Project Path="codingTracker.0lcm/codingTracker.0lcm.csproj"/>
+</Solution>
