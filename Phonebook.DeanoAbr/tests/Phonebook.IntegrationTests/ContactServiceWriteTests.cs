@@ -95,6 +95,27 @@ public class ContactServiceWriteTests : IDisposable
     }
 
     [Fact]
+    public async Task UpdateAsync_WhenIdDoesNotExist_ReturnsFailureAndDoesNotCreateARow()
+    {
+        using var context = _db.NewContext();
+        var service = new ContactService(context);
+
+        var (success, error) = await service.UpdateAsync(new Contact
+        {
+            Id = 999,
+            Name = "Ghost Contact",
+            Email = "ghost@example.com",
+            PhoneNumber = "082 123 4567",
+            Category = ContactCategory.Other,
+        });
+
+        Assert.False(success);
+        Assert.Equal("No contact with Id 999 was found.", error);
+        Assert.Null(await context.Contacts.AsNoTracking().FirstOrDefaultAsync(c => c.Id == 999));
+        Assert.Equal(3, await context.Contacts.CountAsync());
+    }
+
+    [Fact]
     public async Task DeleteAsync_WhenIdDoesNotExist_ReturnsFailureAndLeavesTableUntouched()
     {
         using var context = _db.NewContext();

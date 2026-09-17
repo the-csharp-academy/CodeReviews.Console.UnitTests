@@ -56,6 +56,14 @@ public class ContactService(AppDbContext context)
     {
         try
         {
+            // Update() on a keyed entity is an UPDATE that affects zero rows when the Id
+            // does not exist; EF then throws a concurrency exception, which would surface
+            // as a raw database message. Check first so the caller gets the same friendly
+            // "not found" message the other methods produce.
+            bool exists = await context.Contacts.AsNoTracking().AnyAsync(c => c.Id == contact.Id);
+            if (!exists)
+                return (false, $"No contact with Id {contact.Id} was found.");
+
             // EF only allows ONE tracked instance per key. If a previous operation
             // (e.g. AddAsync) left the same entity tracked, detach it first so
             // Update() can attach the edited copy.
