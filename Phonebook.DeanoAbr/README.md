@@ -1,4 +1,41 @@
-# Phonebook — C# Academy (Entity Framework)
+# Phonebook — C# Academy Unit Testing project
+
+## ✅ How to run the tests
+
+**Prerequisites:** .NET 8 SDK (pinned via `global.json`), no other setup.
+
+```bash
+dotnet build                 # builds the app + both test projects
+dotnet test                  # runs every test
+
+dotnet test tests/Phonebook.UnitTests/Phonebook.UnitTests.csproj               # unit tests only
+dotnet test tests/Phonebook.IntegrationTests/Phonebook.IntegrationTests.csproj # integration tests only
+```
+
+- **Unit tests** cover pure logic with no database and no console: input validation (name, email, phone)
+  and the prompt-until-valid loop (`InputCollector`), plus the email/SMS sandbox behaviour.
+- **Integration tests** run against a **real SQLite database file**, created fresh for every test in the
+  temp folder — never EF's `InMemoryDatabase`, which does not behave like a real SQL database (no real
+  SQL, no constraints, no commit boundary). They cover schema creation, code-first seeding, CRUD
+  persistence across context instances, category-stored-as-text, and how database-constraint failures are
+  handled.
+
+## ✅ Requirement traceability (project 21 — Unit Testing)
+
+| Requirement | Where |
+|---|---|
+| A unit test project under the same solution as the app | `tests/Phonebook.UnitTests/Phonebook.UnitTests.csproj` |
+| Unit tests cover the input validation methods | `tests/Phonebook.UnitTests/ValidationServiceTests.cs` |
+| Unit tests cover the re-prompt-until-valid input loops | `tests/Phonebook.UnitTests/InputCollectorTests.cs` + `src/Services/InputCollector.cs` |
+| Correct **and** incorrect inputs are tested | `[Theory]` data rows in `ValidationServiceTests.cs`: valid values, plus empty, whitespace, `null`, too few/many digits and letters |
+| An integration test project under the same solution | `tests/Phonebook.IntegrationTests/Phonebook.IntegrationTests.csproj` |
+| Integration tests do **not** use `InMemoryDatabase` | `tests/Phonebook.IntegrationTests/TestDatabase.cs` (file-backed SQLite) and `Database_WhenCreated_UsesSqliteProviderAndNotTheInMemoryProvider` |
+| Schema / code-first behaviour tested | `tests/Phonebook.IntegrationTests/SqliteSchemaTests.cs` |
+| CRUD tested against the real database | `tests/Phonebook.IntegrationTests/ContactServiceReadTests.cs`, `ContactServiceWriteTests.cs` |
+| Test names express intent | e.g. `AddAsync_WhenNameIsNull_ReturnsFailureInsteadOfThrowingOrPersisting` |
+| Both test projects live in the app's solution | `Phonebook.sln` (app + `Phonebook.UnitTests` + `Phonebook.IntegrationTests`) |
+
+Test totals today: **33 unit tests** + **14 integration tests** = 47.
 
 ## ✅ How to run the project
 
@@ -6,7 +43,7 @@
 
 ```bash
 dotnet run    # starts the app (creates phonebook.db on first run)
-dotnet test   # runs the validation unit tests (16 tests)
+dotnet test   # runs all 47 tests (33 unit + 14 integration)
 ```
 
 The app is fully usable without any configuration. Email and SMS run in **sandbox mode** by default: they compose the message and show it on screen instead of sending. To send for real, set these environment variables before running:
@@ -40,11 +77,12 @@ How it works:
 |---|---|
 | `src/Models` | `Contact` entity + `ContactCategory` enum |
 | `src/Data` | `AppDbContext` — SQLite connection, schema config, `HasData` seeding, SQL logging |
-| `src/Services` | `ContactService` (EF CRUD), `ValidationService` (name/email/phone), `EmailService` (MailKit), `SmsService` (Twilio REST) |
+| `src/Services` | `ContactService` (EF CRUD), `ValidationService` (name/email/phone), `InputCollector` (re-prompt-until-valid loop), `EmailService` (MailKit), `SmsService` (Twilio REST) |
 | `src/Controllers` | `ContactController` — menu flow, validation loops, all use-case orchestration |
 | `src/UI` | `UserInterface` — Spectre.Console prompts, tables, format hints, messages |
 | `src/Program.cs` | Dependency wiring + top-level exception guard |
-| `tests/Phonebook.Tests` | xUnit tests for the validation logic |
+| `tests/Phonebook.UnitTests` | xUnit tests for validation logic, the input loop and sandbox services |
+| `tests/Phonebook.IntegrationTests` | xUnit tests against a real SQLite database (schema, seeding, CRUD, constraints) |
 
 Key decisions and why:
 
