@@ -6,6 +6,12 @@ namespace Phonebook.Data;
 
 public class AppDbContext : DbContext
 {
+    // Used by the app: OnConfiguring below supplies the SQLite connection.
+    public AppDbContext() { }
+
+    // Used by tests: lets a test point EF at its own database.
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
     public DbSet<Contact> Contacts => Set<Contact>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
