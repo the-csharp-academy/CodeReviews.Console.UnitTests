@@ -207,36 +207,18 @@ public class ContactController(ContactService contactService, EmailService email
     }
 
     // Validation loops: re-ask until valid; empty input cancels the current flow.
-    private static string ReadValidName()
-    {
-        while (true)
-        {
-            var name = UserInterface.AskForName().Trim();
-            if (name.Length == 0) return string.Empty; // empty = cancel
-            if (ValidationService.IsValidName(name)) return name;
-            UserInterface.ShowError("A name can't be empty.");
-        }
-    }
+    private static string ReadValidName() => InputCollector.ReadValid(
+        () => UserInterface.AskForName(),
+        ValidationService.IsValidName,
+        _ => UserInterface.ShowError("A name can't be empty."));
 
-    private static string ReadValidEmail()
-    {
-        while (true)
-        {
-            var email = UserInterface.AskForEmail().Trim();
-            if (email.Length == 0) return string.Empty;
-            if (ValidationService.IsValidEmail(email)) return email;
-            UserInterface.ShowError($"Invalid email. Expected format: {UserInterface.ExpectedEmailFormat}");
-        }
-    }
+    private static string ReadValidEmail() => InputCollector.ReadValid(
+        () => UserInterface.AskForEmail(),
+        ValidationService.IsValidEmail,
+        _ => UserInterface.ShowError($"Invalid email. Expected format: {UserInterface.ExpectedEmailFormat}"));
 
-    private static string ReadValidPhone()
-    {
-        while (true)
-        {
-            var phone = UserInterface.AskForPhone().Trim();
-            if (phone.Length == 0) return string.Empty;
-            if (ValidationService.IsValidPhoneNumber(phone)) return phone;
-            UserInterface.ShowError($"Invalid phone number. Accepted formats: {UserInterface.ExpectedPhoneFormats}");
-        }
-    }
+    private static string ReadValidPhone() => InputCollector.ReadValid(
+        () => UserInterface.AskForPhone(),
+        ValidationService.IsValidPhoneNumber,
+        _ => UserInterface.ShowError($"Invalid phone number. Accepted formats: {UserInterface.ExpectedPhoneFormats}"));
 }
