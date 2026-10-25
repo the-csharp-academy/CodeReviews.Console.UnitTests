@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="PhoneBook.IntegrationTests/PhoneBook.IntegrationTests.csproj" />
+  <Project Path="Phonebook.UnitTests/Phonebook.UnitTests.csproj" DisplayName="PhoneBook.UnitTests" />
+  <Project Path="silvermax.PhoneBook.csproj" />
+</Solution>
