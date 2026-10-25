@@ -18,6 +18,15 @@ public class PhoneBookContext : DbContext
     {
         optionsBuilder.UseSqlServer( @"Server=(localdb)\mssqllocaldb;Database=PhoneBookDb;Trusted_Connection=True;");
     }
+    public PhoneBookContext(
+    DbContextOptions<PhoneBookContext> options)
+    : base(options)
+    {
+    }
+
+    public PhoneBookContext()
+    {
+    }
 
     public void SeedDataFromExcel()
     {

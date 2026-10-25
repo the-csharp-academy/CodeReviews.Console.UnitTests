@@ -1,4 +1,5 @@
 ﻿using PhoneBook.Models;
+using PhoneBook.Repository;
 using PhoneBook.Services;
 using PhoneBook.UI;
 namespace PhoneBook.Controller;
@@ -11,6 +12,12 @@ public class ContactController
     public ContactController()
     {
         _contactService = new ContactService();
+        _consoleUI = new ConsoleUI();
+    }
+
+    public ContactController(PhoneBookContext context)
+    {
+        _contactService = new ContactService(context);
         _consoleUI = new ConsoleUI();
     }
     public async Task InsertContactAsync(Contact contact)

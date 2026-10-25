@@ -5,40 +5,45 @@ namespace PhoneBook.Services;
 
 public class ContactService
 {
-    private readonly PhoneBookContext _phoneBookContext;
+    private readonly PhoneBookContext _context;
 
     public ContactService()
     {
-        _phoneBookContext = new PhoneBookContext();
+        _context = new PhoneBookContext();
+    }
+
+    public ContactService(PhoneBookContext context)
+    {
+        _context = context;
     }
     internal async Task DeleteContactAsync(int id)
     {
-        var contact = await _phoneBookContext.Contacts.FindAsync(id);
-        _phoneBookContext.Contacts.Remove(contact!);
-        await _phoneBookContext.SaveChangesAsync();
+        var contact = await _context.Contacts.FindAsync(id);
+        _context.Contacts.Remove(contact!);
+        await _context.SaveChangesAsync();
     }
 
     internal async Task InsertContactAsync(Contact contact)
     {
-        _phoneBookContext.Contacts.Add(contact);
-        await _phoneBookContext.SaveChangesAsync();
+        _context.Contacts.Add(contact);
+        await _context.SaveChangesAsync();
     }
 
     public async Task ModifyContactAsync(Contact contact)
     {
         contact.UpdatedAt = DateTime.UtcNow;
 
-        bool exists = await _phoneBookContext.Contacts.AnyAsync(c => c.Id == contact.Id);
+        bool exists = await _context.Contacts.AnyAsync(c => c.Id == contact.Id);
         if (!exists)
             throw new InvalidOperationException($"No contact found with Id {contact.Id}.");
 
-        _phoneBookContext.Contacts.Update(contact);
-        await _phoneBookContext.SaveChangesAsync();
+        _context.Contacts.Update(contact);
+        await _context.SaveChangesAsync();
     }
 
     internal async Task<List<Contact>> SearchByNameAsync(string firstName, string lastName)
     {
-        return await _phoneBookContext.Contacts
+        return await _context.Contacts
             .Include(c => c.PhoneNumbers)
             .Include(c => c.Emails)
             // Use direct equality and rely on the database collation for case-insensitive
@@ -50,7 +55,7 @@ public class ContactService
 
     internal async Task<List<Contact>> ViewAllContactAsync()
     {
-        return await _phoneBookContext.Contacts
+        return await _context.Contacts
     .Include(c => c.PhoneNumbers)
     .Include(c => c.Emails)
     .ToListAsync();
@@ -58,6 +63,6 @@ public class ContactService
 
     internal void ImportContacts(string filePath)
     {
-        _phoneBookContext.ImportDataFromFile(filePath);
+        _context.ImportDataFromFile(filePath);
     }
 }

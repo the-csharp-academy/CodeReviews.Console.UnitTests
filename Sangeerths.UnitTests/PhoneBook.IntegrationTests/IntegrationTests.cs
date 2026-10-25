@@ -5,15 +5,32 @@ using Microsoft.EntityFrameworkCore;
 namespace PhoneBook.IntegrationTests
 {
     [TestFixture]
+    [NonParallelizable]
+
     public class IntegrationTests
     {
         private ContactController _contactController = null!;
         private PhoneBookContext _context = null!;
+        private const string TestConnectionString =
+            "Server=(localdb)\\mssqllocaldb;" +
+            "Database=PhoneBookTestDb;" +
+            "Trusted_Connection=True;" +
+            "TrustServerCertificate=True;";
         [SetUp]
         public void SetUp()
         {
-            _contactController = new ContactController();
-            _context = new PhoneBookContext();
+            var options = new DbContextOptionsBuilder<PhoneBookContext>()
+                 .UseSqlServer(TestConnectionString)
+                 .Options;
+
+            _context = new PhoneBookContext(options);
+
+            
+            _context.Database.EnsureDeleted();
+            _context.Database.Migrate();
+
+            
+            _contactController = new ContactController(_context);
         }
 
         [Test]
@@ -23,7 +40,7 @@ namespace PhoneBook.IntegrationTests
 
             var contact = new Contact
             {
-                FirstName = "mathew",
+                FirstName = "Mathew",
                 LastName = "Doe",
 
 
@@ -46,7 +63,7 @@ namespace PhoneBook.IntegrationTests
             var savedContact = await _context.Contacts
                 .Include(c => c.PhoneNumbers)
                 .FirstOrDefaultAsync(c =>
-                    c.FirstName == "John" &&
+                    c.FirstName == "Mathew" &&
                     c.LastName == "Doe");
 
             Console.WriteLine("4. Query completed");
@@ -54,8 +71,9 @@ namespace PhoneBook.IntegrationTests
             Assert.That(savedContact, Is.Not.Null);
             Assert.That(savedContact!.PhoneNumbers, Has.Count.EqualTo(1));
             Assert.That(savedContact.PhoneNumbers, Has.Count.EqualTo(1));
-            Assert.That(savedContact.PhoneNumbers[0].Number,
-                Is.EqualTo("123-456-7890"));
+            Assert.That(
+               savedContact.PhoneNumbers[0].Number,
+               Is.EqualTo("8456274935"));
             Assert.That(savedContact.PhoneNumbers[0].Label,
                 Is.EqualTo(LabelType.Mobile));
         }
@@ -146,27 +164,35 @@ namespace PhoneBook.IntegrationTests
 
             _context.Contacts.Add(contact);
             await _context.SaveChangesAsync();
-
+            int contactId = contact.Id;
             contact.FirstName = "Matthew";
 
             // Act
             await _contactController.ModifyContact(contact);
 
             // Assert
-            await _context.Entry(contact).ReloadAsync();
+            var options = new DbContextOptionsBuilder<PhoneBookContext>()
+         .UseSqlServer(TestConnectionString)
+         .Options;
 
-            Assert.That(contact.FirstName, Is.EqualTo("Matthew"));
+            await using var verificationContext =
+                new PhoneBookContext(options);
+
+            var updatedContact = await verificationContext.Contacts
+                .AsNoTracking()
+                .SingleOrDefaultAsync(c => c.Id == contactId);
+
+            Assert.That(updatedContact, Is.Not.Null);
+            Assert.That(updatedContact!.FirstName, Is.EqualTo("Matthew"));
+            Assert.That(updatedContact.LastName, Is.EqualTo("Doe"));
         }
 
         [Test]
         public async Task DeleteContact_WhenContactDoesNotExist_ShouldHandleGracefully()
         {
-            // Arrange
-            int invalidId = -1;
-
-            // Act
+            
             Assert.DoesNotThrowAsync(async () =>
-                await _contactController.DeleteContactAsync(invalidId));
+               await _contactController.DeleteContactAsync(-1));
         }
 
         [Test]
