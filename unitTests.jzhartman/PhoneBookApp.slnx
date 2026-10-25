@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="PhoneBook.IntegrationTests/PhoneBook.IntegrationTests.csproj" Id="2861d228-8d12-499f-b733-2d9708abea13" />
+  <Project Path="PhoneBook.UnitTests/PhoneBook.UnitTests.csproj" />
+  <Project Path="PhoneBook/PhoneBook.csproj" />
+</Solution>

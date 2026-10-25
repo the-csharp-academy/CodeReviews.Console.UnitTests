@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PhoneBook": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Programming\\C Sharp Academy\\PhoneBook\\PhoneBook"
+    }
+  }
+}
