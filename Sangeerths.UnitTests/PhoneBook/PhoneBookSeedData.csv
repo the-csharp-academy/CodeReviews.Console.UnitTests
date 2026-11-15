@@ -1,0 +1,12 @@
+ContactId,FirstName,LastName,OrganizationName,JobTitle,Notes,CreatedAt,PhoneNumber,PhoneLabel,PhoneCreatedAt,EmailAddress,EmailLabel,EmailCreatedAt,EmailUpdatedAt
+1,Arjun,Menon,TechNova Solutions,Software Engineer,Primary work contact,2026-09-01T09:30:00Z,+91 98765 43210,Mobile,2026-09-01T09:35:00Z,arjun.menon@example.com,Mobile,2026-09-01T09:40:00Z,
+1,Arjun,Menon,TechNova Solutions,Software Engineer,Primary work contact,2026-09-01T09:30:00Z,+91 80860 12345,Work,2026-09-01T09:36:00Z,arjun.menon@technova.example,Work,2026-09-01T09:41:00Z,
+2,Ananya,Nair,GreenLeaf Designs,UI/UX Designer,Met at a design conference,2026-09-02T10:15:00Z,+91 98470 11223,Mobile,2026-09-02T10:20:00Z,ananya.nair@example.com,Home,2026-09-02T10:25:00Z,
+3,Rahul,Varma,CloudCore Technologies,Project Manager,Project coordination,2026-09-03T11:00:00Z,+91 471 278 4567,Work,2026-09-03T11:05:00Z,rahul.varma@cloudcore.example,Work,2026-09-03T11:10:00Z,
+4,Meera,Krishnan,,,Personal contact,2026-09-04T08:45:00Z,+91 99460 77889,Mobile,2026-09-04T08:50:00Z,meera.krishnan@example.com,Home,2026-09-04T08:55:00Z,
+5,Vishnu,Kumar,FinEdge Systems,Backend Developer,API development contact,2026-09-05T13:10:00Z,+91 98950 44556,Mobile,2026-09-05T13:15:00Z,vishnu.kumar@finedge.example,Work,2026-09-05T13:20:00Z,
+5,Vishnu,Kumar,FinEdge Systems,Backend Developer,API development contact,2026-09-05T13:10:00Z,+91 81290 33445,Work,2026-09-05T13:16:00Z,,,,
+6,Sneha,Thomas,BrightPath Consulting,Business Analyst,Business requirements contact,2026-09-06T15:30:00Z,+91 95670 66778,Mobile,2026-09-06T15:35:00Z,sneha.thomas@example.com,Mobile,2026-09-06T15:40:00Z,
+6,Sneha,Thomas,BrightPath Consulting,Business Analyst,Business requirements contact,2026-09-06T15:30:00Z,,,,sneha.thomas@brightpath.example,Work,2026-09-06T15:41:00Z,
+7,Adithya,Joseph,NextGen Labs,DevOps Engineer,Infrastructure and deployment,2026-09-07T09:00:00Z,+91 94470 88990,Mobile,2026-09-07T09:05:00Z,adithya.joseph@nextgen.example,Work,2026-09-07T09:10:00Z,
+8,Priya,Suresh,HealthPlus,HR Manager,HR contact,2026-09-08T10:30:00Z,+91 484 267 1234,Work,2026-09-08T10:35:00Z,priya.suresh@healthplus.example,Work,2026-09-08T10:40:00Z,
